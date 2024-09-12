@@ -83,6 +83,42 @@
         socket.send(`speed:${speed}`);  // Send speed setting to server
       });
     });
+    // Prevent scrolling on every click!
+
+// super sweet vanilla JS delegated event handling!
+document.body.addEventListener("click", function (e) {
+  if (e.target && e.target.nodeName == "A") {
+    e.preventDefault();
+  }
+});
+
+function touchStartHandler(event) {
+  console.log(event.target.dataset.direction);
+  console.log("Touch Start!");
+  // alert("Click!")
+}
+
+function touchEndHandler(event) {
+  console.log(event.target.name);
+  console.log("Touch End!");
+  // alert("Click!")
+}
+
+document.querySelectorAll(".control").forEach((item) => {
+  item.addEventListener("touchstart", touchStartHandler);
+});
+
+document.querySelectorAll(".control").forEach((item) => {
+  item.addEventListener("touchend", touchEndHandler);
+});
+
+var speedSettings = document.querySelectorAll(
+  'input[type=radio][name="speed-settings"]'
+);
+speedSettings.forEach((radio) =>
+  radio.addEventListener("change", () => alert(radio.value))
+);
+
   </script>
 </body>
 </html>
