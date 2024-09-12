@@ -1,15 +1,17 @@
-const WebSocket = require('ws');
-const http = require('http');
+// server.js
 
-// Use the PORT environment variable or default to 8080
-const PORT = process.env.PORT || 8080;
+const path = require('path');
+const express = require('express');
+const WebSocket = require('ws');
+
+// Create an Express application
+const app = express();
+
+// Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Create an HTTP server
-const server = http.createServer((req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end('WebSocket server is running');
-});
-
+const server = require('http').createServer(app);
 const wss = new WebSocket.Server({ server });
 
 // Broadcast message to all connected clients
@@ -22,19 +24,20 @@ function broadcast(message) {
 }
 
 wss.on('connection', ws => {
-  console.log('ESP32 connected');
+  console.log('Client connected');
 
   ws.on('message', message => {
     console.log(`Received message => ${message}`);
-    broadcast(message); // Forward message to all connected ESP32s
+    broadcast(message); // Forward message to all connected clients
   });
 
   ws.on('close', () => {
-    console.log('ESP32 disconnected');
+    console.log('Client disconnected');
   });
 });
 
 // Start server
+const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {
   console.log(`WebSocket server started on ws://localhost:${PORT}`);
 });
