@@ -1,10 +1,15 @@
-// server.js
-
 const WebSocket = require('ws');
 const http = require('http');
 
+// Use the PORT environment variable or default to 8080
+const PORT = process.env.PORT || 8080;
+
 // Create an HTTP server
-const server = http.createServer();
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('WebSocket server is running');
+});
+
 const wss = new WebSocket.Server({ server });
 
 // Broadcast message to all connected clients
@@ -30,6 +35,6 @@ wss.on('connection', ws => {
 });
 
 // Start server
-server.listen(8080, () => {
-  console.log('WebSocket server started on ws://localhost:8080');
+server.listen(PORT, () => {
+  console.log(`WebSocket server started on ws://localhost:${PORT}`);
 });
